@@ -1,13 +1,24 @@
 const mongoose = require('mongoose')
 
+let isConnected = false;
+
 const connectMongoDB = async (url) => {
-    return mongoose.connect(url).then(() => {
+    if (isConnected) {
+        console.log("Using existing MongoDB connection")
+        return;
+    }
+
+    try {
+        await mongoose.connect(url, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        isConnected = true;
         console.log("MongoDB Connected Successfully")
-    }).catch((err) => {
-        console.log("Error While Connecting MongoDB:", err)
-    })
+    } catch (err) {
+        console.log("MongoDB Connection Error:", err)
+        throw err;
+    }
 }
 
-module.exports = {
-    connectMongoDB
-}
+module.exports = { connectMongoDB }
