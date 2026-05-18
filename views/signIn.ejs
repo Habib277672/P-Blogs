@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P-Blogs — Sign In</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              page: "#0B0B0F",
+              surface: "#12121A",
+              card: "#16161F",
+            },
+            fontFamily: {
+              display: ["Syne", "sans-serif"],
+              body: ["Outfit", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Outfit", sans-serif;
+      }
+
+      /* Ambient glow behind the card */
+      .glow-bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            ellipse 60% 40% at 50% 0%,
+            rgba(124, 58, 237, 0.13) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 40% 30% at 80% 80%,
+            rgba(168, 85, 247, 0.07) 0%,
+            transparent 60%
+          );
+      }
+
+      /* Card top accent line */
+      .card-line {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #7c3aed 30%,
+          #a855f7 70%,
+          transparent
+        );
+      }
+
+      /* Blinking cursor */
+      .cursor-blink {
+        display: inline-block;
+        width: 2px;
+        height: 15px;
+        background: #a855f7;
+        margin-left: 2px;
+        vertical-align: middle;
+        border-radius: 1px;
+        animation: blink 1.1s step-start infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* Input focus glow */
+      input:focus {
+        box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5);
+      }
+
+      /* Submit button shimmer */
+      .btn-submit {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-submit::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          105deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.12) 50%,
+          transparent 60%
+        );
+        transform: translateX(-100%);
+        transition: transform 0.45s ease;
+      }
+      .btn-submit:hover::after {
+        transform: translateX(100%);
+      }
+    </style>
+  </head>
+
+  <body class="h-full bg-page">
+    <% if (locals.error) { %>
+  <div id="error-alert" role="alert" style="
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+    padding: 0.75rem 1.25rem;
+    z-index: 9999;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  ">
+    <%= locals.error %>
+  </div>
+<% } %>
+    <div class="glow-bg" aria-hidden="true"></div>
+
+    <div
+      class="relative flex min-h-full flex-col justify-center px-6 py-12 lg:px-8"
+    >
+      <!-- Logo -->
+      <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <a
+          href="/"
+          class="flex items-center justify-center gap-2.5 group w-fit mx-auto"
+        >
+          <div
+            class="w-8 h-8 rounded-lg bg-violet-600 group-hover:bg-violet-500 transition-colors duration-200 flex items-center justify-center shrink-0"
+          >
+            <span class="font-display text-white font-bold text-sm leading-none"
+              >P</span
+            >
+          </div>
+          <span
+            class="font-display font-bold text-lg text-zinc-100 tracking-tight leading-none"
+          >
+            P<span class="text-violet-400">-</span>Blogs
+          </span>
+          <span class="cursor-blink" aria-hidden="true"></span>
+        </a>
+
+        <h2
+          class="mt-4 text-center text-2xl font-display font-bold tracking-tight text-zinc-100"
+        >
+          Welcome Back
+        </h2>
+        <p class="mt-1.5 text-center text-sm text-zinc-500">
+          Sign in to continue to your account
+        </p>
+      </div>
+
+      <!-- Card -->
+      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div
+          class="bg-card rounded-2xl border border-white/[0.07] overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.5)]"
+        >
+          <!-- Top accent line -->
+          <div class="card-line"></div>
+
+          <div class="px-6 py-8">
+            <form action="/user/signin" method="POST" class="space-y-5">
+              <!-- Email -->
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-zinc-300 mb-1.5"
+                >
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  required
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  class="block w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 hover:border-white/[0.14] focus:border-violet-500/60 focus:outline-none transition-colors duration-150"
+                />
+              </div>
+
+              <!-- Password -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-zinc-300"
+                  >
+                    Password
+                  </label>
+                  <a
+                    href="/forgot-password"
+                    class="text-xs font-medium text-violet-400 hover:text-violet-300 transition-colors duration-150"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  name="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="••••••••"
+                  class="block w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 hover:border-white/[0.14] focus:border-violet-500/60 focus:outline-none transition-colors duration-150"
+                />
+              </div>
+
+              <!-- Submit -->
+              <div class="pt-1">
+                <button
+                  type="submit"
+                  class="btn-submit w-full flex justify-center items-center gap-2 rounded-xl bg-violet-600 hover:bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_28px_rgba(124,58,237,0.6)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-500 transition-all duration-200"
+                >
+                  Sign in
+                  <svg
+                    class="w-4 h-4 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </form>
+
+            <!-- Divider -->
+            <div class="relative my-6">
+              <div
+                class="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
+                <div class="w-full border-t border-white/[0.06]"></div>
+              </div>
+              <div class="relative flex justify-center">
+                <span class="bg-card px-3 text-xs text-zinc-600">or</span>
+              </div>
+            </div>
+
+            <!-- Register link -->
+            <p class="text-center text-sm text-zinc-500">
+              Don't have an account?
+              <a
+                href="/user/signup"
+                class="font-semibold text-violet-400 hover:text-violet-300 transition-colors duration-150 ml-1"
+              >
+                Create one
+              </a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Back to home -->
+        <p class="mt-5 text-center">
+          <a
+            href="/"
+            class="inline-flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors duration-150"
+          >
+            <svg
+              class="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+            Back to P-Blogs
+          </a>
+        </p>
+      </div>
+    </div>
+    <script>setTimeout(() => {
+      const alert = document.getElementById('error-alert');
+      if (alert) alert.style.display = 'none';
+    }, 3000);</script>
+  </body>
+</html>

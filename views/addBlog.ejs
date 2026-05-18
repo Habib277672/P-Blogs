@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <%- include('./partials/head') %>
+  </head>
+  <body class="h-full bg-page font-body">
+    <%- include('./components/header') %>
+
+    <!-- Ambient glow -->
+    <div
+      class="fixed inset-0 pointer-events-none -z-10"
+      style="
+        background:
+          radial-gradient(
+            ellipse 55% 35% at 50% 0%,
+            rgba(124, 58, 237, 0.11) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 35% 25% at 90% 90%,
+            rgba(168, 85, 247, 0.06) 0%,
+            transparent 60%
+          );
+      "
+      aria-hidden="true"
+    ></div>
+
+    <main class="max-w-3xl mx-auto px-6 py-12">
+      <!-- Page heading -->
+      <div class="mb-8">
+        <div class="flex items-center gap-2 mb-3">
+          <a
+            href="/"
+            class="inline-flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-400 transition-colors duration-150"
+          >
+            <svg
+              class="w-3 h-3"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 12H5M12 5l-7 7 7 7" />
+            </svg>
+            Home
+          </a>
+          <span class="text-zinc-700 text-xs">/</span>
+          <span class="text-xs text-zinc-500">New Blog</span>
+        </div>
+        <h1
+          class="text-2xl font-display font-bold text-zinc-100 tracking-tight"
+        >
+          Write a new blog
+        </h1>
+        <p class="mt-1 text-sm text-zinc-500">
+          Fill in the details below and hit publish when you're ready.
+        </p>
+      </div>
+
+      <!-- Card -->
+      <div
+        class="bg-[#16161F] rounded-2xl border border-white/[0.07] shadow-[0_24px_64px_rgba(0,0,0,0.45)] overflow-hidden"
+      >
+        <!-- Top accent line -->
+        <div
+          style="
+            height: 1px;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              #7c3aed 30%,
+              #a855f7 70%,
+              transparent
+            );
+          "
+        ></div>
+
+        <form
+          action="/blog"
+          method="POST"
+          enctype="multipart/form-data"
+          class="px-6 py-8 space-y-6"
+        >
+          <!-- Title -->
+          <div>
+            <label
+              for="title"
+              class="block text-sm font-medium text-zinc-300 mb-1.5"
+            >
+              Blog Title
+              <span class="text-violet-500 ml-0.5">*</span>
+            </label>
+            <input
+              id="title"
+              type="text"
+              name="title"
+              required
+              maxlength="120"
+              placeholder="e.g. How I built a full-stack blog in Node.js"
+              class="block w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 hover:border-white/[0.14] focus:border-violet-500/60 focus:outline-none focus:shadow-[0_0_0_2px_rgba(124,58,237,0.4)] transition-all duration-150"
+            />
+            <p class="mt-1.5 text-xs text-zinc-600">
+              Keep it clear and descriptive — max 120 characters.
+            </p>
+          </div>
+
+          <!-- Body / Content -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="body" class="block text-sm font-medium text-zinc-300">
+                Content
+                <span class="text-violet-500 ml-0.5">*</span>
+              </label>
+              <span id="charCount" class="text-xs text-zinc-600"
+                >0 characters</span
+              >
+            </div>
+            <textarea
+              id="body"
+              name="body"
+              required
+              rows="14"
+              placeholder="Write your blog content here..."
+              oninput="updateCount(this)"
+              class="block w-full rounded-xl bg-white/[0.04] border border-white/[0.08] px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 hover:border-white/[0.14] focus:border-violet-500/60 focus:outline-none focus:shadow-[0_0_0_2px_rgba(124,58,237,0.4)] transition-all duration-150 resize-y leading-relaxed"
+            ></textarea>
+            <p class="mt-1.5 text-xs text-zinc-600">
+              Min 50 characters recommended.
+            </p>
+          </div>
+
+          <!-- Cover Image Upload -->
+          <div>
+            <label class="block text-sm font-medium text-zinc-300 mb-1.5">
+              Cover Image
+              <span class="text-zinc-600 font-normal ml-1">(optional)</span>
+            </label>
+
+            <!-- Drop zone -->
+            <label
+              for="coverImage"
+              id="dropZone"
+              class="relative flex flex-col items-center justify-center gap-3 w-full rounded-xl border border-dashed border-white/[0.1] bg-white/[0.02] hover:bg-violet-500/[0.04] hover:border-violet-500/40 transition-all duration-200 cursor-pointer group min-h-[140px] px-6 py-8"
+            >
+              <!-- Preview image (hidden by default) -->
+              <img
+                id="imagePreview"
+                src=""
+                alt="Cover preview"
+                class="hidden absolute inset-0 w-full h-full object-cover rounded-xl opacity-40"
+              />
+
+              <!-- Upload icon -->
+              <div
+                id="uploadIcon"
+                class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center group-hover:bg-violet-500/15 transition-colors duration-200 relative z-10"
+              >
+                <svg
+                  class="w-5 h-5 text-violet-400"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+
+              <div class="text-center relative z-10" id="uploadText">
+                <p
+                  class="text-sm font-medium text-zinc-400 group-hover:text-zinc-300 transition-colors"
+                >
+                  Click to upload
+                  <span class="text-zinc-600 font-normal"> or drag & drop</span>
+                </p>
+                <p class="text-xs text-zinc-600 mt-1">
+                  PNG, JPG, WEBP — max 5MB
+                </p>
+              </div>
+
+              <input
+                id="coverImage"
+                type="file"
+                name="coverImageURL"
+                accept="image/png, image/jpeg, image/webp"
+                class="sr-only"
+                onchange="previewImage(event)"
+              />
+            </label>
+
+            <!-- Remove image btn -->
+            <button
+              type="button"
+              id="removeImage"
+              onclick="removePreview()"
+              class="hidden mt-2 text-xs text-red-400/70 hover:text-red-400 transition-colors duration-150 flex items-center gap-1"
+            >
+              <svg
+                class="w-3 h-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18M6 6l12 12" />
+              </svg>
+              Remove image
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px bg-white/[0.05]"></div>
+
+          <!-- Actions -->
+          <div class="flex items-center justify-between gap-4 pt-1">
+            <a
+              href="/"
+              class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-zinc-500 hover:text-zinc-300 border border-white/[0.07] hover:border-white/[0.14] hover:bg-white/[0.03] transition-all duration-200"
+            >
+              Cancel
+            </a>
+
+            <button
+              type="submit"
+              class="relative overflow-hidden flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-sm font-semibold text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_28px_rgba(124,58,237,0.6)] transition-all duration-200 group"
+            >
+              <svg
+                class="w-4 h-4 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 20h9" />
+                <path
+                  d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"
+                />
+              </svg>
+              Publish Blog
+              <span
+                class="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 ease-in-out"
+                aria-hidden="true"
+              ></span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tips card -->
+      <div
+        class="mt-6 bg-violet-500/[0.05] border border-violet-500/[0.12] rounded-xl px-5 py-4 flex gap-4"
+      >
+        <div class="shrink-0 mt-0.5">
+          <svg
+            class="w-4 h-4 text-violet-400"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4M12 8h.01" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-violet-300 mb-1">Writing tips</p>
+          <ul class="text-xs text-zinc-500 space-y-1">
+            <li>
+              • A good title is specific and tells readers exactly what they'll
+              learn.
+            </li>
+            <li>
+              • A cover image makes your blog stand out on the listing page.
+            </li>
+            <li>• Aim for at least 300 words to keep readers engaged.</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      function updateCount(el) {
+        const count = el.value.length;
+        const label = document.getElementById("charCount");
+        label.textContent =
+          count.toLocaleString() + " character" + (count !== 1 ? "s" : "");
+        label.style.color = count >= 50 ? "#a78bfa" : "#52525b";
+      }
+
+      function previewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const preview = document.getElementById("imagePreview");
+          preview.src = e.target.result;
+          preview.classList.remove("hidden");
+          document.getElementById("uploadIcon").classList.add("hidden");
+          document.getElementById("uploadText").classList.add("hidden");
+          document.getElementById("removeImage").classList.remove("hidden");
+          document.getElementById("dropZone").classList.add("min-h-[200px]");
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removePreview() {
+        document.getElementById("coverImage").value = "";
+        document.getElementById("imagePreview").classList.add("hidden");
+        document.getElementById("imagePreview").src = "";
+        document.getElementById("uploadIcon").classList.remove("hidden");
+        document.getElementById("uploadText").classList.remove("hidden");
+        document.getElementById("removeImage").classList.add("hidden");
+        document.getElementById("dropZone").classList.remove("min-h-[200px]");
+      }
+
+      const zone = document.getElementById("dropZone");
+      zone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        zone.classList.add("border-violet-500/60", "bg-violet-500/[0.07]");
+      });
+      zone.addEventListener("dragleave", () => {
+        zone.classList.remove("border-violet-500/60", "bg-violet-500/[0.07]");
+      });
+      zone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        zone.classList.remove("border-violet-500/60", "bg-violet-500/[0.07]");
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) {
+          const input = document.getElementById("coverImage");
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          input.files = dt.files;
+          previewImage({ target: { files: [file] } });
+        }
+      });
+    </script>
+  </body>
+</html>

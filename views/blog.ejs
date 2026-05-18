@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title><%= blog.title %> — P-Blogs</title>
+  </head>
+  <body class="bg-page min-h-screen font-body">
+
+    <%- include('./components/header') %>
+
+    <!-- Ambient glow -->
+    <div class="fixed inset-0 pointer-events-none -z-10"
+         style="background:
+           radial-gradient(ellipse 55% 35% at 50% 0%, rgba(124,58,237,0.10) 0%, transparent 70%),
+           radial-gradient(ellipse 35% 25% at 10% 90%, rgba(168,85,247,0.05) 0%, transparent 60%);"
+         aria-hidden="true">
+    </div>
+
+    <main class="max-w-3xl mx-auto px-6 py-12">
+
+      <!-- Back button -->
+      <a href="/"
+         class="inline-flex items-center gap-1.5 text-xs text-zinc-600
+                hover:text-zinc-400 transition-colors duration-150 mb-8 group">
+        <svg class="w-3 h-3 group-hover:-translate-x-0.5 transition-transform duration-150"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+        Back to all blogs
+      </a>
+
+      <!-- Article card -->
+      <article class="bg-[#16161F] rounded-2xl border border-white/[0.07]
+                      shadow-[0_24px_64px_rgba(0,0,0,0.45)] overflow-hidden">
+
+        <!-- Top accent line -->
+        <div style="height:1px;background:linear-gradient(90deg,transparent,#7C3AED 30%,#A855F7 70%,transparent)"></div>
+
+        <!-- Cover Image -->
+        <% if (blog.coverImageURL) { %>
+          <div class="w-full h-64 sm:h-80 overflow-hidden">
+            <img src="<%= blog.coverImageURL %>"
+                 alt="<%= blog.title %>"
+                 class="w-full h-full object-cover opacity-90" />
+          </div>
+        <% } %>
+
+        <div class="px-6 sm:px-10 py-10">
+
+          <!-- Meta -->
+          <div class="flex items-center gap-3 mb-5">
+            <span class="inline-flex items-center gap-1.5 text-xs font-medium
+                         text-violet-400 bg-violet-500/10 border border-violet-500/20
+                         px-2.5 py-1 rounded-full">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+              <%= new Date(blog.createdAt).toLocaleDateString('en-US', {
+                    month: 'long', day: 'numeric', year: 'numeric'
+                  }) %>
+            </span>
+
+            <span class="w-1 h-1 rounded-full bg-zinc-700" aria-hidden="true"></span>
+
+            <span class="text-xs text-zinc-600">
+              <%= Math.ceil(blog.body.split(' ').length / 200) %> min read
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-2xl sm:text-3xl font-display font-bold text-zinc-100
+                     tracking-tight leading-snug mb-8">
+            <%= blog.title %>
+          </h1>
+
+          <!-- Divider -->
+          <div class="h-px bg-white/[0.05] mb-8"></div>
+
+          <!-- Body -->
+          <div class="text-zinc-400 text-sm sm:text-base leading-relaxed
+                      whitespace-pre-wrap break-words">
+            <%= blog.body %>
+          </div>
+
+          <!-- Bottom divider -->
+          <div class="h-px bg-white/[0.05] mt-10 mb-8"></div>
+
+          <!-- Footer -->
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full overflow-hidden border border-violet-500/30 shrink-0">
+                <img
+                  src="<%= (blog.createdBy && blog.createdBy.profileImageUrl) ? blog.createdBy.profileImageUrl : '/images/default.jpg' %>"
+                  alt="<%= (blog.createdBy && blog.createdBy.fullName) ? blog.createdBy.fullName : 'Anonymous' %>"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <p class="text-xs text-zinc-600">Written by</p>
+                <p class="text-sm font-medium text-zinc-300">
+                  <%= (blog.createdBy && blog.createdBy.fullName) ? blog.createdBy.fullName : 'Anonymous' %>
+                </p>
+              </div>
+            </div>
+
+            <a href="/"
+               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium
+                      text-zinc-500 hover:text-zinc-300 border border-white/[0.07]
+                      hover:border-white/[0.14] hover:bg-white/[0.03]
+                      transition-all duration-200">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+              </svg>
+              More blogs
+            </a>
+          </div>
+
+          
+          <!-- Bottom divider -->
+          <div class="h-px bg-white/[0.05] mt-10 mb-8"></div>
+
+          <!-- Comments Section -->
+          <div>
+            <h2 class="text-base font-display font-bold text-zinc-100 mb-6 flex items-center gap-2">
+              <svg class="w-4 h-4 text-violet-400" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Leave a Comment
+            </h2>
+
+            <% if (locals.user) { %>
+
+              <!-- Comment Form -->
+              <form action="/blog/comment/<%= blog._id %>" method="post">
+                <div class="flex items-start gap-3">
+
+                  <!-- User avatar -->
+                  <div class="w-8 h-8 rounded-full overflow-hidden border border-violet-500/30 shrink-0 mt-1">
+                    <img
+                      src="<%= locals.user.profileImageUrl ? locals.user.profileImageUrl : '/images/default.jpg' %>"
+                      alt="<%= locals.user.fullName %>"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <!-- Input + button -->
+                  <div class="flex-1 flex flex-col gap-3">
+                    <textarea
+                      name="content"
+                      rows="3"
+                      placeholder="Share your thoughts..."
+                      required
+                      class="block w-full rounded-xl bg-white/[0.04] border border-white/[0.08]
+                             px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600
+                             hover:border-white/[0.14] focus:border-violet-500/60
+                             focus:outline-none focus:shadow-[0_0_0_2px_rgba(124,58,237,0.3)]
+                             transition-all duration-150 resize-none leading-relaxed"
+                    ></textarea>
+
+                    <div class="flex justify-end">
+                      <button
+                        type="submit"
+                        class="relative overflow-hidden flex items-center gap-2 px-5 py-2.5
+                               rounded-xl bg-violet-600 hover:bg-violet-500
+                               text-sm font-semibold text-white
+                               shadow-[0_0_16px_rgba(124,58,237,0.35)]
+                               hover:shadow-[0_0_24px_rgba(124,58,237,0.55)]
+                               transition-all duration-200 group">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        Post Comment
+                        <span class="absolute inset-0 -translate-x-full group-hover:translate-x-full
+                                     bg-gradient-to-r from-transparent via-white/10 to-transparent
+                                     transition-transform duration-500" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+            <% } else { %>
+
+              <!-- Not logged in — prompt to sign in -->
+              <div class="flex items-center gap-4 px-5 py-4 rounded-xl
+                          bg-violet-500/[0.05] border border-violet-500/[0.12]">
+                <svg class="w-5 h-5 text-violet-400 shrink-0" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <p class="text-sm text-zinc-400">
+                  Want to comment?
+                  <a href="/user/signin"
+                     class="text-violet-400 hover:text-violet-300 font-semibold transition-colors ml-1">
+                    Sign in
+                  </a>
+                  to join the conversation.
+                </p>
+              </div>
+
+            <% } %>
+          </div>
+
+          <!-- Bottom divider -->
+          <div class="h-px bg-white/[0.05] mt-10 mb-8"></div>
+
+          <!-- Existing Comments -->
+        <% if (comments && comments.length > 0) { %>
+          <h2 class="text-base font-display font-bold text-zinc-100 mb-6 flex items-center gap-2">
+              <svg class="w-4 h-4 text-violet-400" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Comments ( <%= comments.length %> )
+            </h2>
+          <div class="mt-8 flex flex-col gap-4">
+            <% comments.forEach(comment => { %>
+              <div class="flex items-start gap-3">
+
+                <!-- Commenter avatar -->
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-violet-500/30 shrink-0 mt-1">
+                  <img
+                    src="<%= (comment.createdBy && comment.createdBy.profileImageUrl) ? comment.createdBy.profileImageUrl : '/images/default.jpg' %>"
+                    alt="<%= (comment.createdBy && comment.createdBy.fullName) ? comment.createdBy.fullName : 'Anonymous' %>"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+
+                <!-- Comment bubble -->
+                <div class="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3">
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-sm font-medium text-zinc-300">
+                      <%= (comment.createdBy && comment.createdBy.fullName) ? comment.createdBy.fullName : 'Anonymous' %>
+                    </span>
+                    <span class="text-xs text-zinc-600">
+                      <%= new Date(comment.createdAt).toLocaleDateString('en-US', {
+                            month: 'short', day: 'numeric', year: 'numeric'
+                          }) %>
+                    </span>
+                  </div>
+                  <p class="text-sm text-zinc-400 leading-relaxed whitespace-pre-wrap"><%= comment.content %></p>
+                </div>
+
+              </div>
+            <% }) %>
+          </div>
+        <% } else { %>
+          <p class="mt-6 text-sm text-zinc-600 text-center">No comments yet. Be the first to share your thoughts!</p>
+        <% } %>
+
+        </div>
+      </article>
+
+    </main>
+
+  </body>
+</html>
